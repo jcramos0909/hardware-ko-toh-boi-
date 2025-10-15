@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reliable Hardware Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('https://images.unsplash.com/photo-1581090700227-1e8e5d5f8ab4?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .product {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px;
+      padding: 15px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .product img {
+      max-width: 100%;
+      height: 140px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .product h3 {
+      margin: 10px 0 5px;
+    }
+
+    .product button {
+      padding: 10px;
+      background: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .cart {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      width: 300px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .cart h2 {
+      margin-top: 0;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .checkout-btn {
+      background: #007BFF;
+      color: white;
+      padding: 10px;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Reliable Hardware Store</h1>
+</header>
+
+<div class="container" id="product-list">
+  <!-- Products inserted by JavaScript -->
+</div>
+
+<div class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <p><strong>Total: $<span id="cart-total">0.00</span></strong></p>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+  const products = [
+    {
+      id: 1,
+      name: 'Hammer',
+      price: 12.99,
+      image: 'https://cdn.pixabay.com/photo/2012/04/14/16/27/hammer-34286_1280.png'
+    },
+    {
+      id: 2,
+      name: 'Screwdriver',
+      price: 7.50,
+      image: 'https://cdn.pixabay.com/photo/2013/07/13/14/01/screwdriver-162348_1280.png'
+    },
+    {
+      id: 3,
+      name: 'Drill',
+      price: 45.00,
+      image: 'https://cdn.pixabay.com/photo/2016/04/01/11/00/cordless-drill-1291023_1280.png'
+    },
+    {
+      id: 4,
+      name: 'Wrench Set',
+      price: 29.99,
+      image: 'https://cdn.pixabay.com/photo/2012/04/13/21/07/wrench-33610_1280.png'
+    },
+    {
+      id: 5,
+      name: 'Nails (100pcs)',
+      price: 5.25,
+      image: 'https://cdn.pixabay.com/photo/2014/12/15/14/03/nails-569252_1280.jpg'
+    }
+  ];
+
+  const cart = [];
+
+  const productList = document.getElementById('product-list');
+  const cartItems = document.getElementById('cart-items');
+  const cartTotal = document.getElementById('cart-total');
+
+  // Display products
+  products.forEach(product => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p>Price: $${product.price.toFixed(2)}</p>
+      <button onclick="addToCart(${product.id})">Add to Cart</button>
+    `;
+    productList.appendChild(div);
+  });
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const item = cart.find(p => p.id === id);
+    if (item) {
+      item.quantity++;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    updateCart();
+  }
+
+  function updateCart() {
+    cartItems.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.quantity;
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <span>${item.name} x${item.quantity}</span>
+        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+      `;
+      cartItems.appendChild(div);
+    });
+    cartTotal.innerText = total.toFixed(2);
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert('Your cart is empty.');
+      return;
+    }
+    alert('Thank you for your purchase!');
+    cart.length = 0;
+    updateCart();
+  }
+</script>
+
+</body>
+</html>
